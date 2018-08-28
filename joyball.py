@@ -1,6 +1,7 @@
 from appium import webdriver
 import time
 import cv2
+import numpy as np
 
 img_path = "d:/1.png";
 img_cut_path = "d:/1_cut.png";
