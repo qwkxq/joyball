@@ -6,7 +6,7 @@ from appium import webdriver
 from PIL import Image
 import time
 
-img_path = "d:/imgWork/uuid/";
+img_path = "d:/imgWork/uuid/"
 
 # desired_caps = {}
 # desired_caps['platformName'] = 'Android'
