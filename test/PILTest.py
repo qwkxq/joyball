@@ -122,6 +122,8 @@ def main():
         im = Image.open(img_src)
         global RGBList
         RGBList = im.getdata()
+        toList = list(RGBList);
+
         if RGBList[WIDTH * 20 + CENTER_SCREEN_WIDTH] != OVER_BACK_RGB:
             LEFT_BLOCK_BORDER = Get_LEFT_BLOCK_BORDER()
             if LEFT_BLOCK_BORDER != 0:
