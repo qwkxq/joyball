@@ -4,7 +4,7 @@ import cv2
 
 from appium import webdriver
 from PIL import Image
-import time
+import time, uuid
 
 img_path = "d:/imgWork/uuid/"
 
@@ -43,10 +43,11 @@ img_path = "d:/imgWork/uuid/"
 # time.sleep(5)
 # driver.quit()
 
+img_name = "test3.png";
+img_src = img_path + img_name
+img_dest = img_path + "dest/" + img_name
 
 """
-img_src = img_path + "test2.png"
-
 img = cv2.imread(img_src)
 
 # 切出图片中间位置，需要根据具体分辨率修改
@@ -75,13 +76,84 @@ ring = circles[0]
 
 """
 
+"""
 im = Image.open(img_src)
 global RGBList
 RGBList = im.getdata()
 
-for x in range(0, 1080):
-    orangeRgba = (255, 117, 70, 255)
-    nowRgba = RGBList[742 * 1080 + x]
-    if nowRgba == orangeRgba:
-        print(x)
-        # break
+startX, endX, initY = 0, 0, 0
+xMinArray, xMaxArray = [], []
+coord = {}
+
+# 纵向查找X
+orangeRgba = (255, 117, 70, 255)
+backRgba = (59, 59, 59, 255)
+ballRgba = (66, 204, 250, 255)
+for y in range(700, 900):
+    tempX = []
+    for x in range(0, 1080):
+        nowRgba = RGBList[y * 1080 + x]
+        if nowRgba == orangeRgba:
+            tempX.append(x)
+    if len(tempX) > 0:
+        minV = min(tempX)
+        maxV = max(tempX)
+        xMinArray.append(minV)
+        xMaxArray.append(maxV)
+        coord[maxV] = [y, minV]
+
+if len(xMaxArray) > 0:
+    endX = max(xMaxArray)
+    startX = coord[endX][1]
+    initY = coord[endX][0]
+    print(endX, coord[endX])
+    cs = coord[maxV]
+    labelImg = cv2.imread(img_src)
+    cv2.line(labelImg, (startX, initY), (endX, initY), (0, 255, 0), 10)
+    cv2.imwrite(img_dest, labelImg)
+else: #没找到色块
+    print(1)
+
+"""
+
+im = Image.open("d:/imgWork/uuid/src/1.png")
+ballRgba = (66, 204, 250, 255)
+global RGBList
+RGBList = im.getdata()
+findBall = False
+for y in range(0, 545):
+    for x in range(530, 550):
+        nowRgba = RGBList[y * 1080 + x]
+        if nowRgba == ballRgba:
+            findBall = True
+            break
+    if findBall:
+        print(y)
+        break
+
+"""
+labelEnd = False
+finish = False
+for y in range(0, 1090):
+    for x in range(0, 1080):
+        orangeRgba = (255, 117, 70, 255)
+        nowRgba = RGBList[y * 1080 + x]
+
+        if nowRgba == orangeRgba:
+            if not labelEnd:
+                labelEnd = True
+                startX = x
+            # print(x)
+            # break
+        elif nowRgba != orangeRgba and labelEnd:
+            endX = x - 1
+            labelEnd = False
+            finish = True
+    if finish:
+        initY = y
+        break
+print(startX, ",", endX)
+labelImg = cv2.imread(img_src)
+cv2.line(labelImg, (startX, initY), (endX, initY), (0, 255, 0), 10)
+cv2.imwrite(img_path + "dest/" + str(uuid.uuid1()) + ".png", labelImg)
+"""
