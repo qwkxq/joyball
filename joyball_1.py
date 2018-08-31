@@ -120,16 +120,29 @@ im = Image.open("d:/imgWork/uuid/src/1.png")
 ballRgba = (66, 204, 250, 255)
 global RGBList
 RGBList = im.getdata()
-findBall = False
-for y in range(0, 545):
-    for x in range(530, 550):
-        nowRgba = RGBList[y * 1080 + x]
-        if nowRgba == ballRgba:
-            findBall = True
+
+
+def findBallPosition(RGBList):
+    findBall = False
+    retX, retY = 0, 0;
+    for y in range(0, 545):
+        for x in range(530, 550):
+            nowRgba = RGBList[y * 1080 + x]
+            if nowRgba == ballRgba:
+                findBall = True
+                retX = x
+                retY = y
+                break
+        if findBall:
+            # print(y)
             break
-    if findBall:
-        print(y)
-        break
+    return (retX,retY)
+
+
+while True:
+    point = findBallPosition(RGBList)
+    if point[1] < 450:
+        print(point)
 
 """
 labelEnd = False
